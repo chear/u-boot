@@ -36,6 +36,8 @@
 #include <asm/arch/boot_type.h>
 DECLARE_GLOBAL_DATA_PTR;
 
+#define DEBUG
+
 static struct bootloader_message misc_message;
 
 void fastboot_flash_partition_init(void)
@@ -168,9 +170,9 @@ int android_misc_flash_check(void) {
 	{
 		if(!strcmp(misc_message.command, "boot-recovery")) {
 			/* there is a recovery command */
-			puts("find boot recovery\n");
+			puts("find boot recovery --1. \n");
 			setenv("bootcmd", "run setargs_mmc boot_recovery");
-			puts("Recovery detected, will boot recovery\n");
+			puts("Recovery detected, will boot recovery --2. \n");
 			/* android recovery will clean the misc */
 		}
 		else{
@@ -180,7 +182,7 @@ int android_misc_flash_check(void) {
 		if(!strcmp(misc_message.command, "boot-fastboot")) {
 			/* there is a fastboot command */
 			setenv("bootcmd", "run setargs_mmc boot_fastboot");
-			puts("Fastboot detected, will enter fastboot\n");
+			puts("Fastboot detected, will enter fastboot --3. \n");
 			/* clean the misc partition ourself */
 			memset(buffer, 0, 2048);
 			sunxi_flash_write(misc_offset, 2048/512, buffer);
@@ -190,17 +192,17 @@ int android_misc_flash_check(void) {
 	{
 		if(!strcmp(misc_message.command, "boot-recovery")) {
 			/* there is a recovery command */
-			puts("find boot recovery\n");
+			puts("find boot recovery --4. \n");
 			setenv("bootcmd", "run setargs_nand boot_recovery");
-			puts("Recovery detected, will boot recovery\n");
+			puts("Recovery detected, will boot recovery --5.\n");
 			/* android recovery will clean the misc */
 		}
         else
         if (!strcmp(misc_message.command, "usb-recovery")) {
 		/* there is a recovery command */
-		puts("find usb recovery\n");
+		puts("find usb recovery --6.\n");
 		setenv("bootcmd", "run setargs_nand boot_recovery");
-		puts("Recovery detected, will usb recovery\n");
+		puts("Recovery detected, will usb recovery --7. \n");
 		/* android recovery will clean the misc */
 		}
 		else{
@@ -211,7 +213,7 @@ int android_misc_flash_check(void) {
 		if(!strcmp(misc_message.command, "boot-fastboot")) {
 			/* there is a fastboot command */
 			setenv("bootcmd", "run setargs_nand boot_fastboot");
-			puts("Fastboot detected, will enter fastboot\n");
+			puts("Fastboot detected, will enter fastboot --8.\n");
 			/* clean the misc partition ourself */
 			memset(buffer, 0, 2048);
 			sunxi_flash_write(misc_offset, 2048/512, buffer);
