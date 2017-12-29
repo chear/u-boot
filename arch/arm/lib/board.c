@@ -539,18 +539,19 @@ void board_init_r(gd_t *id, ulong dest_addr)
 
 #ifdef CONFIG_ALLWINNER
 	//liugang add for card boot, 2012-10-23
-	//printf("%s: mannly set storage_type/mmc_card_no = 0, for card boot, by liugang\n", __func__);
-	//storage_type = 1;
-	//mmc_card_no = 0;
+	printf("%s: mannly set storage_type/mmc_card_no = 0, for card boot, by liugang\n", __func__);
+	storage_type = 1;
+	mmc_card_no = 0;
 
+    printf("chear:storage_type =  %d \n",storage_type);
 	if(!storage_type){
 		puts("NAND:  ");
 		nand_init();		/* go init the NAND */
-	}
-	else{
-		puts("MMC:   ");
+    }
+    else{
+		puts("1.MMC:   ");
         mmc_initialize(bd);
-	}
+    }
 	sunxi_flash_handle_init();
 	tick_printf(__FILE__, __LINE__);
 	sunxi_partition_init();
@@ -566,7 +567,7 @@ void board_init_r(gd_t *id, ulong dest_addr)
 
 #if defined(CONFIG_GENERIC_MMC)
 	if(storage_type){
-		puts("MMC:   ");
+		puts("MMC::   ");
 		mmc_initialize(bd);
 	}
 #endif/*CONFIG_GENERIC_MMC*/

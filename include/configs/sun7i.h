@@ -31,8 +31,8 @@
  * High Level Configuration Options
  */
 
-//#define DEBUG
-//#define DEBUG_TICK_PRINTF
+#define DEBUG
+#define DEBUG_TICK_PRINTF
 
 #define CONFIG_ALLWINNER			/* It's a Allwinner chip */
 #define	CONFIG_SUNXI				/* which is sunxi family */
@@ -111,12 +111,15 @@
 #define CONFIG_GENERIC_MMC
 #define CONFIG_CMD_MMC
 #define CONFIG_MMC_SUNXI
-#define CONFIG_MMC_SUNXI_SLOT		2		/* which mmc slot to use, could be 0,1,2,3 */
+#define CONFIG_MMC_SUNXI_SLOT       2	/* which mmc slot to use, could be 0,1,2,3 */
+//#define CONFIG_MMC_SUNXI_SLOT       0
 #define CONFIG_MMC_SUNXI_USE_DMA
 #define CONFIG_ENV_IS_IN_MMC
 #define CONFIG_SYS_MMC_ENV_DEV		mmc_card_no
+//#define CONFIG_SYS_MMC_ENV_DEV      2
 #define CONFIG_STORAGE_EMMC
 #define CONFIG_FASTBOOT_MMC_NO		mmc_card_no
+//#define CONFIG_FASTBOOT_MMC_NO      2 
 #define CONFIG_MMC_LOGICAL_OFFSET   (20 * 1024 * 1024/512)
 
 #define CONFIG_DOS_PARTITION

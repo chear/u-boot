@@ -33,7 +33,7 @@
 #include <malloc.h>
 #include <mmc.h>
 
-#undef SUNXI_MMCDBG
+#define SUNXI_MMCDBG
 #ifdef SUNXI_MMCDBG
 #define MMCDBG(fmt...)	printf("[mmc]: "fmt)
 
@@ -709,7 +709,10 @@ out:
 
 int sunxi_mmc_init(int sdc_no)
 {
-	struct mmc *mmc;
+#ifdef DEBUG
+    printf("4. call sunxi_mmc_init in sunxi_mmc.c\n");
+#endif
+    struct mmc *mmc;
 
 	memset(&mmc_dev[sdc_no], 0, sizeof(struct mmc));
 	memset(&mmc_host[sdc_no], 0, sizeof(struct sunxi_mmc_host));
@@ -731,7 +734,9 @@ int sunxi_mmc_init(int sdc_no)
 	mmc_host[sdc_no].pdes = 0x50000000;
 	mmc_resource_init(sdc_no);
 	mmc_clk_io_on(sdc_no);
-
+#ifdef DEBUG
+    printf("5. call mmc_register in sunxi_mmc.c \n");
+#endif
 	mmc_register(mmc);
 
 	return 0;

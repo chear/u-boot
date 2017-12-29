@@ -140,7 +140,7 @@ int sunxi_flash_handle_init(void){
 
 		if (mmc_init(mmc)) {
 			puts("MMC init failed\n");
-			return  -1;
+			//return  -1;
 		}
 		
 		sunxi_flash_read  = sunxi_flash_mmc_read;

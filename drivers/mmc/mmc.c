@@ -1202,6 +1202,7 @@ int mmc_init(struct mmc *mmc)
 
 	/* Test for SD version 2 */
 	err = mmc_send_if_cond(mmc);
+    printf("chear: mmc_send_if_cond = %d\n",err);
 
 	/* Now try to get the SD card's operating condition */
 	err = sd_send_op_cond(mmc);
@@ -1212,11 +1213,14 @@ int mmc_init(struct mmc *mmc)
 
 		if (err) {
 			printf("Card did not respond to voltage select!\n");
-			return UNUSABLE_ERR;
+			//return UNUSABLE_ERR;
 		}
 	}
 
 	err = mmc_startup(mmc);
+#ifdef DEBUG
+    printf("6. mmc_startup = %d \n",err);
+#endif
 	if (err)
 		mmc->has_init = 0;
 	else
@@ -1263,7 +1267,9 @@ int mmc_initialize(bd_t *bis)
 {
 	INIT_LIST_HEAD (&mmc_devices);
 	cur_dev_num = mmc_card_no;
-
+#ifdef DEBUG
+    printf("2. chear mmc_initialize\n");
+#endif
 	if (board_mmc_init(bis) < 0)
 		cpu_mmc_init(bis);
 

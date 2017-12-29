@@ -231,11 +231,14 @@ int check_android_misc(void){
 
 void set_boot_type_arg(void){
 	
-	if(storage_type){
+#ifdef DEBUG
+    printf("check_android_misc storage type = %d\n", storage_type);
+#endif
+    if(storage_type){
 		setenv("bootcmd", "run setargs_mmc boot_normal");
 	}
 	else{
-		setenv("bootcmd", "run setargs_nand boot_normal");
+	    setenv("bootcmd", "run setargs_nand boot_normal");
 	}
 }
 /* add board specific code here */
@@ -290,7 +293,10 @@ int dram_init(void)
 #ifdef CONFIG_GENERIC_MMC
 int board_mmc_init(bd_t *bis)
 {
-	sunxi_mmc_init(mmc_card_no);
+#ifdef DEBUG
+    printf("3.chear:sunxi_mmc_init in sun7i-evb.c !!!!!\n");
+#endif
+    sunxi_mmc_init(mmc_card_no);
 	
 	return 0;
 }
