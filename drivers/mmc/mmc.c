@@ -1176,8 +1176,130 @@ block_dev_desc_t *mmc_get_dev(int dev)
 }
 #endif
 
+int board_mmc_getcd(struct mmc *mmc)__attribute__((weak,
+                alias("__board_mmc_getcd")));
+
+int mmc_getcd(struct mmc *mmc)
+{
+        int cd;
+
+        cd = board_mmc_getcd(mmc);
+        if (cd < 0) {
+            if (mmc->getcd)
+                cd = mmc->getcd(mmc);
+            else
+                cd = 1;
+        }
+        return cd;
+}
+
+
+
+int mmc_start_init(struct mmc *mmc)
+{
+    int err;
+    
+    if (mmc_getcd(mmc) == 0) {
+        mmc->has_init = 0;
+        printf("MMC: no card present\n");
+        return NO_CARD_ERR;
+    }
+    
+    if (mmc->has_init)
+        return 0;
+
+    err = mmc->init(mmc);
+    if (err)
+        return err;
+
+
+    
+    mmc_set_bus_width(mmc, 1);
+    mmc_set_clock(mmc, 1);
+    
+    /* Reset the Card */
+    err = mmc_go_idle(mmc);
+
+    
+    if (err)
+        return err;
+
+
+    
+    /* The internal partition reset to user partition(0) at every CMD0*/
+    mmc->part_num = 0;
+
+
+    
+    /* Test for SD version 2 */
+    err = mmc_send_if_cond(mmc);
+
+    
+    /* Now try to get the SD card's operating condition */
+    err = sd_send_op_cond(mmc);
+
+
+    
+    /* If the command timed out, we check for an MMC card */
+    if (err == TIMEOUT) {
+        err = mmc_send_op_cond(mmc);
+
+        if (err && err != IN_PROGRESS) {
+            printf("Card did not respond to voltage select!\n");
+            return UNUSABLE_ERR;
+        }
+    }
+
+    
+    if (err == IN_PROGRESS)
+        mmc->init_in_progress = 1;
+
+
+    
+    return err;
+}
+
+static int mmc_complete_init(struct mmc *mmc)
+{
+    int err = 0;
+    
+    if (mmc->op_cond_pending)
+        err = mmc_complete_op_cond(mmc);
+
+    
+    if (!err)
+        err = mmc_startup(mmc);
+        
+    if (err)
+        mmc->has_init = 0;
+    else
+        mmc->has_init = 1;
+        
+    mmc->init_in_progress = 0;
+    
+    return err;
+}
+
+
+
 int mmc_init(struct mmc *mmc)
 {
+#ifdef 1
+    int err = IN_PROGRESS;
+    unsigned start = get_timer(0);
+    
+    if (mmc->has_init)
+        return 0;
+
+    if (!mmc->init_in_progress)
+        err = mmc_start_init(mmc);
+    if (!err || err == IN_PROGRESS)    
+        err = mmc_complete_init(mmc);        
+    debug("%s: %d, time %lu\n", __func__, err, get_timer(start));
+    
+    return err;
+
+#else
 	int err;
 
 	if (mmc->has_init)
@@ -1227,6 +1349,7 @@ int mmc_init(struct mmc *mmc)
 		mmc->has_init = 1;
 	
 	return err;
+#endif
 }
 
 /*
@@ -1263,6 +1386,21 @@ int get_mmc_num(void)
 	return cur_dev_num;
 }
 
+
+static void do_preinit(void)
+{
+    struct mmc *m;
+    struct list_head *entry;
+    
+    list_for_each(entry, &mmc_devices) {
+        m = list_entry(entry, struct mmc, link);
+
+        if (m->preinit)
+            mmc_start_init(m);
+    }
+}
+
+
 int mmc_initialize(bd_t *bis)
 {
 	INIT_LIST_HEAD (&mmc_devices);
@@ -1274,6 +1412,9 @@ int mmc_initialize(bd_t *bis)
 		cpu_mmc_init(bis);
 
 	print_mmc_devices(',');
+#ifdef 1
+    do_preinit();
+#endif
 
 	return 0;
 }

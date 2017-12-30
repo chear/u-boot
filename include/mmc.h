@@ -152,6 +152,17 @@
 #define EXT_CSD_CARD_TYPE	196	/* RO */
 #define EXT_CSD_REV		192	/* RO */
 #define EXT_CSD_SEC_CNT		212	/* RO, 4 bytes */
+#define EXT_CSD_PARTITIONING_SUPPORT160/* RO */
+#define EXT_       CSD_ERASE_GROUP_DEF175/* R/W */
+#define EXT_CSD_PART_CONF179/* R                       /W */
+#define EXT_CSD_BUS_WIDTH183/* R/W */
+#define EXT_CSD_HS_TIM         ING185/* R/W */
+#define EXT_CSD_REV192/* RO */
+#define EXT_CSD                            _CARD_TYPE196/* RO */
+#define EXT_CSD_SEC_CNT212/* RO, 4 bytes                           */
+#define EXT_CSD_HC_ERASE_GRP_SIZE224/* RO */
+#define EXT_CSD_BOO        T_MULT226/* RO */
+            
 
 /*
  * EXT_CSD field definitions
@@ -192,6 +203,10 @@
 #define PART_ACCESS_MASK	(0x7)
 #define PART_SUPPORT		(0x1)
 
+/* Maximum block size for MMC */
+#define MMC_MAX_BLOCK_LEN512
+
+    
 struct mmc_cid {
 	unsigned long psn;
 	unsigned short oid;
