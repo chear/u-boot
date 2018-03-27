@@ -150,18 +150,18 @@
 #define EXT_CSD_BUS_WIDTH	183	/* R/W */
 #define EXT_CSD_HS_TIMING	185	/* R/W */
 #define EXT_CSD_CARD_TYPE	196	/* RO */
-#define EXT_CSD_REV		192	/* RO */
+#define EXT_CSD_REV		    192	/* RO */
 #define EXT_CSD_SEC_CNT		212	/* RO, 4 bytes */
-#define EXT_CSD_PARTITIONING_SUPPORT160/* RO */
-#define EXT_       CSD_ERASE_GROUP_DEF175/* R/W */
-#define EXT_CSD_PART_CONF179/* R                       /W */
-#define EXT_CSD_BUS_WIDTH183/* R/W */
-#define EXT_CSD_HS_TIM         ING185/* R/W */
-#define EXT_CSD_REV192/* RO */
-#define EXT_CSD                            _CARD_TYPE196/* RO */
-#define EXT_CSD_SEC_CNT212/* RO, 4 bytes                           */
-#define EXT_CSD_HC_ERASE_GRP_SIZE224/* RO */
-#define EXT_CSD_BOO        T_MULT226/* RO */
+#define EXT_CSD_PARTITIONING_SUPPORT    160     /* RO */
+#define EXT_CSD_ERASE_GROUP_DEF         175     /* R/W */
+//#define EXT_CSD_PART_CONF               179     /* R/W */
+//#define EXT_CSD_BUS_WIDTH               183     /* R/W */
+//#define EXT_CSD_HS_TIMING               185     /* R/W */
+//#define EXT_CSD_REV                     192     /* RO */
+//#define EXT_CSD_CARD_TYPE               196     /* RO */
+//#define EXT_CSD_SEC_CNT                 212     /* RO, 4 bytes */
+#define EXT_CSD_HC_ERASE_GRP_SIZE       224     /* RO */
+#define EXT_CSD_BOOT_MULT               226     /* RO */
             
 
 /*
@@ -204,7 +204,7 @@
 #define PART_SUPPORT		(0x1)
 
 /* Maximum block size for MMC */
-#define MMC_MAX_BLOCK_LEN512
+#define MMC_MAX_BLOCK_LEN   512
 
     
 struct mmc_cid {
@@ -284,8 +284,33 @@ struct mmc_data {
 	uint blocksize;
 };
 
+#define IN_PROGRESS    -20           /* operation is in progress */
+
+struct mmc_ops {
+	int (*send_cmd)(struct mmc *mmc,
+			struct mmc_cmd *cmd, struct mmc_data *data);
+	void (*set_ios)(struct mmc *mmc);
+	int (*init)(struct mmc *mmc);
+	int (*getcd)(struct mmc *mmc);
+	int (*getwp)(struct mmc *mmc);
+};
+
+
+struct mmc_config {
+	const char *name;
+	const struct mmc_ops *ops;
+	uint host_caps;
+	uint voltages;
+	uint f_min;
+	uint f_max;
+	uint b_max;
+	unsigned char part_type;
+};
+
+
 struct mmc {
 	struct list_head link;
+    const struct mmc_config *cfg;	/* provided configuration */
 	char name[32];
 	void *priv;
 	uint voltages;
@@ -316,6 +341,11 @@ struct mmc {
 	void (*set_ios)(struct mmc *mmc);
 	int (*init)(struct mmc *mmc);
 	uint b_max;
+    char op_cond_pending;	/* 1 if we are waiting on an op_cond command */
+	char init_in_progress;	/* 1 if we have done mmc_start_init() */
+    char preinit;		/* start init as early as possible */
+	uint op_cond_response;	/* the response byte from the last op_cond */
+
 };
 
 int mmc_register(struct mmc *mmc);

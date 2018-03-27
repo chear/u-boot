@@ -1176,21 +1176,28 @@ block_dev_desc_t *mmc_get_dev(int dev)
 }
 #endif
 
-int board_mmc_getcd(struct mmc *mmc)__attribute__((weak,
-                alias("__board_mmc_getcd")));
+/*
+int __board_mmc_getcd_1(struct mmc *mmc) {
+	return -1;
+}
+
+int board_mmc_getcd_1(struct mmc *mmc)__attribute__((weak,
+	alias("__board_mmc_getcd_1")));
+*/
 
 int mmc_getcd(struct mmc *mmc)
 {
-        int cd;
+    int cd;
+    //  cd = board_mmc_getcd_1(mmc);
+    cd = 1;
+    if (cd < 0) {
+        if (mmc->cfg->ops->getcd)
+            cd = mmc->cfg->ops->getcd(mmc);
+        else
+            cd = 1;
+    }
 
-        cd = board_mmc_getcd(mmc);
-        if (cd < 0) {
-            if (mmc->getcd)
-                cd = mmc->getcd(mmc);
-            else
-                cd = 1;
-        }
-        return cd;
+    return cd;
 }
 
 
@@ -1264,8 +1271,11 @@ static int mmc_complete_init(struct mmc *mmc)
     int err = 0;
     
     if (mmc->op_cond_pending)
+#if 1
+        err = 0;
+#else
         err = mmc_complete_op_cond(mmc);
-
+#endif
     
     if (!err)
         err = mmc_startup(mmc);
@@ -1281,11 +1291,78 @@ static int mmc_complete_init(struct mmc *mmc)
 }
 
 
+int mmc_complete_op_cond(struct mmc *mmc)
+{
+#if 1
+    return 0;
+#else
+	struct mmc_cmd cmd;
+	int timeout = 1000;
+	uint start;
+	int err;
+
+	mmc->op_cond_pending = 0;
+	start = get_timer(0);
+	do {
+		err = mmc_send_op_cond_iter(mmc, &cmd, 1);
+		if (err)
+			return err;
+		if (get_timer(start) > timeout)
+			return UNUSABLE_ERR;
+		udelay(100);
+	} while (!(mmc->op_cond_response & OCR_BUSY));
+
+	if (mmc_host_is_spi(mmc)) { /* read OCR for spi */
+		cmd.cmdidx = MMC_CMD_SPI_READ_OCR;
+		cmd.resp_type = MMC_RSP_R3;
+		cmd.cmdarg = 0;
+
+		err = mmc_send_cmd(mmc, &cmd, NULL);
+
+		if (err)
+			return err;
+	}
+
+	mmc->version = MMC_VERSION_UNKNOWN;
+	mmc->ocr = cmd.response[0];
+
+	mmc->high_capacity = ((mmc->ocr & OCR_HCS) == OCR_HCS);
+	mmc->rca = 1;
+
+	return 0;
+#endif
+}
+
+/* We pass in the cmd since otherwise the init seems to fail */
+static int mmc_send_op_cond_iter(struct mmc *mmc, struct mmc_cmd *cmd,
+		int use_arg)
+{
+	int err;
+
+	cmd->cmdidx = MMC_CMD_SEND_OP_COND;
+	cmd->resp_type = MMC_RSP_R3;
+	cmd->cmdarg = 0;
+	if (use_arg && !mmc_host_is_spi(mmc)) {
+		cmd->cmdarg =
+			(mmc->cfg->voltages &
+			(mmc->op_cond_response & OCR_VOLTAGE_MASK)) |
+			(mmc->op_cond_response & OCR_ACCESS_MODE);
+
+		if (mmc->cfg->host_caps & MMC_MODE_HC)
+			cmd->cmdarg |= OCR_HCS;
+	}
+	err = mmc_send_cmd(mmc, cmd, NULL);
+	if (err)
+		return err;
+	mmc->op_cond_response = cmd->response[0];
+	return 0;
+}
 
 int mmc_init(struct mmc *mmc)
 {
-#ifdef 1
-    int err = IN_PROGRESS;
+	int err;
+#if 1
+    err = IN_PROGRESS;
     unsigned start = get_timer(0);
     
     if (mmc->has_init)
@@ -1300,7 +1377,6 @@ int mmc_init(struct mmc *mmc)
     return err;
 
 #else
-	int err;
 
 	if (mmc->has_init)
 		return 0;
@@ -1412,7 +1488,7 @@ int mmc_initialize(bd_t *bis)
 		cpu_mmc_init(bis);
 
 	print_mmc_devices(',');
-#ifdef 1
+#if 1
     do_preinit();
 #endif
 
