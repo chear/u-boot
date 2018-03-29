@@ -548,12 +548,16 @@ void board_init_r(gd_t *id, ulong dest_addr)
 		nand_init();		/* go init the NAND */
 	}
 	else{
+        printf("CONFIG_ALLWINNER --- mmc_initialize\n");
 		puts("MMC:   ");
         mmc_initialize(bd);
 	}
+    /* chear:sunxi_falsh.c  */
 	sunxi_flash_handle_init();
 	tick_printf(__FILE__, __LINE__);
-	sunxi_partition_init();
+	
+    /* chear: partition.c  */
+    sunxi_partition_init();
 	tick_printf(__FILE__, __LINE__);
 #else
 #if defined(CONFIG_CMD_NAND)
@@ -566,7 +570,9 @@ void board_init_r(gd_t *id, ulong dest_addr)
 
 #if defined(CONFIG_GENERIC_MMC)
 	if(storage_type){
+        printf("CONFIG_GENERIC_MMC --- mmc_initialize\n");
 		puts("MMC:   ");
+        /* chear: mmc.c*/
 		mmc_initialize(bd);
 	}
 #endif/*CONFIG_GENERIC_MMC*/

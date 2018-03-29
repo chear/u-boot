@@ -31,8 +31,8 @@
  * High Level Configuration Options
  */
 
-//#define DEBUG
-//#define DEBUG_TICK_PRINTF
+#define DEBUG
+#define DEBUG_TICK_PRINTF
 
 #define CONFIG_ALLWINNER			/* It's a Allwinner chip */
 #define	CONFIG_SUNXI				/* which is sunxi family */
@@ -212,5 +212,7 @@
 #define CONFIG_CMD_BOOTA		/* boot android image */
 #define CONFIG_CMD_RUN			/* run a command */
 #define CONFIG_CMD_BOOTD		/* boot the default command */
+
+#define CONFIG_MMC_TRACE        /* chear: emmc debug */
 
 #endif /* __CONFIG_H */
