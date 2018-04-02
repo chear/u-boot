@@ -502,6 +502,28 @@ sd_send_op_cond(struct mmc *mmc)
 	return 0;
 }
 
+/*chear: send  MMC_CMD_SEND_CID to emmc regiester */
+int mmc_send_cid(struct mmc *mmc){
+    struct mmc_cmd cmd;
+    int err;
+
+    printf(" mmc_send_cid send begin\n");
+    cmd.cmdidx = MMC_CMD_SEND_CID;
+ 	cmd.resp_type = MMC_RSP_R3;
+ 	cmd.cmdarg = 0;
+ 	cmd.flags = 0;
+
+ 	err = mmc_send_cmd(mmc, &cmd, NULL);
+
+ 	if (err){
+        printf(" mmc_send_cid error!\n");
+ 		return err;
+    }
+    printf(" mmc_send_cid end\n");
+    return 0;
+}
+
+
 int mmc_send_op_cond(struct mmc *mmc)
 {
 	int timeout = 10000;
@@ -510,6 +532,9 @@ int mmc_send_op_cond(struct mmc *mmc)
 
 	/* Some cards seem to need this */
 	mmc_go_idle(mmc);
+
+    /* send cid to eMMC*/
+    mmc_send_cid(mmc);
 
  	/* Asking to the card its capabilities */
  	cmd.cmdidx = MMC_CMD_SEND_OP_COND;

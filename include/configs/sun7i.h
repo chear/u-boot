@@ -33,6 +33,12 @@
 
 #define DEBUG
 #define DEBUG_TICK_PRINTF
+#define CONFIG_MTD_DEBUG            /* chear: emmc debug */
+#define CONFIG_MTD_DEBUG_VERBOSE 2  /* chear: emmc debug */
+#define CONFIG_MMC_TRACE            /* chear: emmc debug */
+#define SUNXI_MMCDBG                /* chear: emmc debug */
+
+
 
 #define CONFIG_ALLWINNER			/* It's a Allwinner chip */
 #define	CONFIG_SUNXI				/* which is sunxi family */
@@ -213,6 +219,5 @@
 #define CONFIG_CMD_RUN			/* run a command */
 #define CONFIG_CMD_BOOTD		/* boot the default command */
 
-#define CONFIG_MMC_TRACE        /* chear: emmc debug */
 
 #endif /* __CONFIG_H */
