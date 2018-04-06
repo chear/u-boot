@@ -1,0 +1,55 @@
+zlib.o: zlib.c zutil.h zlib.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/common.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/config.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/config_cmd_defaults.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/config_defaults.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/configs/sun7i.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/arch/cpu.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/config.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm-offsets.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/generated/generic-asm-offsets.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/bitops.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/types.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/bitops.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/proc/system.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/config.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/types.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/posix_types.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/stddef.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/posix_types.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/string.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/string.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/ptrace.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/proc/ptrace.h \
+ /mysrc/a20src/lichee/out/android/common/buildroot/external-toolchain/bin/../lib/gcc/arm-linux-gnueabi/4.6.3/include/stdarg.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/part.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/ide.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/flash.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/image.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/compiler.h \
+ /mysrc/a20src/lichee/out/android/common/buildroot/external-toolchain/bin/../lib/gcc/arm-linux-gnueabi/4.6.3/include/stddef.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/byteorder.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/byteorder/little_endian.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/byteorder/swab.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/byteorder/generic.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/lmb.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/u-boot.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/command.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/arch/boot_type.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/global_data.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/mach-types.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/setup.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/u-boot-arm.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/net.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/u-boot/crc.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/compiler.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm/unaligned.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/unaligned/le_byteshift.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/unaligned/be_byteshift.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/linux/unaligned/generic.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/watchdog.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/u-boot/zlib.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/errno.h \
+ /mysrc/a20src/lichee/u-boot-mars/include/asm-generic/errno.h inftrees.h \
+ inflate.h inffast.h inffixed.h inffast.c inftrees.c inflate.c zutil.c \
+ adler32.c
